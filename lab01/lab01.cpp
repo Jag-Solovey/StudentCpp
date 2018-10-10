@@ -8,10 +8,34 @@ double log (double x, double d)
 }
 //Защита от дурака. Что в нее входит: если происходит ошибка ввода,
 //то значения игнорируются и обнуляются до тех пор, пока не будет введено корректное значение
-float checking1 (float d)
+float checking (float x)
+{
+    cin >> x;
+    while(cin.fail())
+    {
+        cout << "Nice joke, but I do not work like that. Try again!\n ";
+        cin.clear();
+        cin.ignore(6666,'\n');
+        cin >> x;
+    }
+    return x;
+}
+//Проверка того, что выбран существующий вариант
+int checking (int d, float x)
+{
+    if (d < 1 || d > 2)
+    {
+        cout << "\nThere is no such option! :D";
+    }
+    else
+    {
+        cout << "\nResult: " << x;
+    }
+}
+int checking (int d)
 {
     cin >> d;
-    while(cin.fail())
+    while(d < 1 || d > 7)
     {
         cout << "Nice joke, but I do not work like that. Try again!\n ";
         cin.clear();
@@ -20,15 +44,6 @@ float checking1 (float d)
     }
     return d;
 }
-//Проверка того, что выбран существующий вариант
-int checking2 (int d, float x)
-{
-    if (d < 1 || d > 2) {
-        cout << "\nThere is no such option! :D";
-    } else {
-        cout << "\nResult: " << x;
-    }
-}
 int main()
 {
     int d, f = 1;
@@ -36,12 +51,11 @@ int main()
     //Цикл для выполнения повторного использования калькулятора
     while (f == 1) {
         cout << "\nHello, user! What are the numbers?\n";
-        num1 = checking1(d);
-        num2 = checking1(d);
+        num1 = checking(x);
+        num2 = checking(x);
         cout << "\nNumber 1: " << num1 << "\nNumber 2: " << num2
              << "\nWhat do you want to do?\n1. +\n2. -\n3. *\n4. /\n5. ^\n6. sqrt\n7.log\n";
-        //Если человек введет d<1 или d>7, то программа просто перезапустится
-        cin >> d;
+        d = checking(d);
         cout << "Your answer: " << d;
         //Сумма
         if (d == 1)
@@ -62,17 +76,15 @@ int main()
             cout << "\nResult: " << x;
         }
         //Деление, с учетом возможности введенного 0
-        if (d == 4)
-        {
-            if (num2 == 0)
-            {
+        if (d == 4) {
+            if (num2 == 0) {
                 cout << "\nYou cant divide by zero.";
             }
             else
-                {
+            {
                 x = num1 / num2;
                 cout << "\nResult: " << x;
-                }
+            }
         }
         //Квадрат
         if (d == 5)
@@ -88,7 +100,7 @@ int main()
             {
                 x = num2 * num2;
             }
-            checking2(d, x);
+            checking(d, x);
         }
         //Поиск корня
         if (d == 6)
@@ -103,15 +115,15 @@ int main()
             {
                 x = sqrt(num2);
             }
-            checking2(d, x);
+            checking(d, x);
         }
         //Логарифм
         if (d == 7)
         {
             cout << "\nWith which of the numbers do the operation? \n1. " << num1 << "\n2. " << num2 <<
                  "\nAnd enter the base\n";
-            d = checking1(d);
-            x = checking1(x);
+            d = checking(d);
+            x = checking(x);
             if (d == 1)
             {
                 d = num1;
@@ -128,7 +140,7 @@ int main()
             }
         }
         cout << "\nDo you want to try again? \n1. yes\n2. no\n";
-        f = checking1(f);
+        f = checking(f);
     }
     //Выполнил Соловьев Сергей КЭ-106
     return 0;
