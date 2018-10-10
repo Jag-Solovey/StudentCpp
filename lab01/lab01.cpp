@@ -58,86 +58,69 @@ int main()
         d = checking(d);
         cout << "Your answer: " << d;
         //Сумма
-        if (d == 1)
-        {
+        if (d == 1) {
             x = num1 + num2;
-            cout << "\nResult: " << x;
         }
         //Разность
-        if (d == 2)
-        {
+        if (d == 2) {
             x = num1 - num2;
-            cout << "\nResult: " << x;
         }
         //Произведение
-        if (d == 3)
-        {
+        if (d == 3) {
             x = num1 * num2;
-            cout << "\nResult: " << x;
         }
         //Деление, с учетом возможности введенного 0
         if (d == 4) {
             if (num2 == 0) {
                 cout << "\nYou cant divide by zero.";
-            }
-            else
-            {
+            } else {
                 x = num1 / num2;
-                cout << "\nResult: " << x;
             }
         }
         //Квадрат
-        if (d == 5)
-        {
+        if (d == 5) {
             cout << "\nWith which of the numbers do the operation? \n1. " << num1 << "\n2. " << num2;
             //Последние два действия я сделал с выбором числа, с которым нужно произвести подсчет
             cin >> d;
-            if (d == 1)
-            {
+            if (d == 1) {
                 x = num1 * num1;
-            }
-            else if (d == 2)
-            {
+            } else if (d == 2) {
                 x = num2 * num2;
             }
             checking(d, x);
+            d = 5;
         }
         //Поиск корня
-        if (d == 6)
-        {
+        if (d == 6) {
             cout << "\nWith which of the numbers do the operation? \n1. " << num1 << "\n2. " << num2;
             cin >> d;
-            if (d == 1)
-            {
+            if (d == 1) {
                 x = sqrt(num1);
-            }
-            else if (d == 2)
-            {
+            } else if (d == 2) {
                 x = sqrt(num2);
             }
             checking(d, x);
+            d = 6;
         }
         //Логарифм
-        if (d == 7)
-        {
+        if (d == 7) {
             cout << "\nWith which of the numbers do the operation? \n1. " << num1 << "\n2. " << num2 <<
                  "\nAnd enter the base\n";
             d = checking(d);
             x = checking(x);
-            if (d == 1)
-            {
+            if (d == 1) {
                 d = num1;
-                cout << "\nResult: " << log(x,d);
-            }
-            else if (d == 2)
-            {
+                x = log(x, d);
+            } else if (d == 2) {
                 d = num2;
-                cout << "\nResult: " << log(x,d);
+                x = log(x, d);
             }
-            else if (d < 1 || d > 2)
-            {
-                cout << "\nThere is no such option! :D";
-            }
+            checking(d, x);
+            d = 7;
+        }
+        if (d == 1 || d == 2 || d == 3 || d == 4)
+        {
+            cout << "\nResult: " << x;
         }
         cout << "\nDo you want to try again? \n1. yes\n2. no\n";
         f = checking(f);
