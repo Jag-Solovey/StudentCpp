@@ -23,7 +23,7 @@ float checking (float x)
 //Проверка того, что выбран существующий вариант
 int checking (int d, float x)
 {
-    if (d < 1 || d > 2)
+    if (d < 1 || d > 2 )
     {
         cout << "\nThere is no such option! :D";
     }
