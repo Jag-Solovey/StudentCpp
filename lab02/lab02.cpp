@@ -26,6 +26,7 @@ int main()
     cout << "Input actions:\nFor example: + - * /";
     for (int i = 0, k, x; i<=k; i++)
     {
+        //Нахождение количества эл-тов
         k=0;
         while ((Vy1S[x] != 0)&(Vy1S[x+1] != 0))
         {
@@ -66,5 +67,5 @@ int main()
 
     }
     //Вывод результата
-    cout << R;
+    cout << "\nResult: " << R;
 }
