@@ -1,5 +1,6 @@
 #include <iostream>
 using namespace std;
+
 int main()
 {
     //Инициализация массива
@@ -20,22 +21,20 @@ int main()
 
         Vy1S[i] = atoi(&S1vy[0]);
     }
+    delete S1vy;
+    int n=0;
+    //Нахождение количества эл-тов массива
+    while ((Vy1S[n] != 0)||(Vy1S[n+1] != Vy1S[n]))
+    {
+        n++;
+    }
     //Присвоение значения 1-го эл-та массива для написания формулы поиска результата
     int R = Vy1S[0];
     //Ввод действий и нахождение результата
     cout << "Input actions:\nFor example: + - * /";
-    for (int i = 0, k, x; i<=k; i++)
+    for (int i = 0; i<n-1; i++)
     {
-        //Нахождение количества эл-тов
-        k=0;
-        while ((Vy1S[x] != 0)&(Vy1S[x+1] != 0))
-        {
-            k++;
-            x++;
-        }
-        x=0;
-        k=k-1;
-        for (int j = 0; j < 16; j++)
+        for (int j = 0; j < n; j++)
         {
             S1vy[j] = {0};
         }
