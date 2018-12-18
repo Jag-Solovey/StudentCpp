@@ -3,4 +3,4 @@ project(lab02)
 
 set(CMAKE_CXX_STANDARD 14)
 
-add_executable(lab02 lab02.cpp)
+add_executable(lab02 lab02.cpp lab2-02.cpp)
