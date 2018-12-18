@@ -5,9 +5,9 @@ int main()
 {
     //Инициализация массива
     char *S1vy = new char[10];
-    int *Vy1S = new int[99];
+    double *Vy1S = new double[99];
     //Ввод переменных
-    cout << "Input constants:\nFor example: 7 4 5 end";
+    cout << "Input constants:\nFor example: 1.75 0.21 9 end";
     for (int i = 0; i<99; i++)
     {
         for (int j = 0; j < 16; j++)
@@ -18,16 +18,15 @@ int main()
         //Прекращение ввода фразой end
         if ((S1vy[0]=='e')&&(S1vy[1] == 'n')&&(S1vy[2] == 'd')&&(S1vy[3] == '\0'))
         {
-           //Условие того, что введено 0 символов или только 1
-           if ((i==0)||(i==1))
-           {
-               cout << "No need for action!";
-               exit(0);
-           }
-           else break;
+            if ((i==0)||(i==1))
+            {
+                cout << "No need for action!";
+                exit(0);
+            }
+            else break;
         }
 
-        Vy1S[i] = atoi(S1vy);
+        Vy1S[i] = atof(S1vy);
     }
     int n=0;
     //Нахождение количества эл-тов массива
@@ -36,7 +35,7 @@ int main()
         n++;
     }
     //Присвоение значения 1-го эл-та массива для написания формулы поиска результата
-    int R = Vy1S[0];
+    double R = Vy1S[0];
     //Ввод действий и нахождение результата
     cout << "Input actions:\nFor example: + - * /";
     for (int i = 0; i<(n-1); i++)
@@ -49,30 +48,30 @@ int main()
         switch (S1vy[0])
         {
             case '+':
-                {
-                  R = R + Vy1S[i+1];
-                  break;
-                }
+            {
+                R = R + Vy1S[i+1];
+                break;
+            }
             case '-':
-                {
-                  R = R - Vy1S[i+1];
-                  break;
-                }
+            {
+                R = R - Vy1S[i+1];
+                break;
+            }
             case '*':
-                {
-                  R = R * Vy1S[i+1];
-                  break;
-                }
+            {
+                R = R * Vy1S[i+1];
+                break;
+            }
             case '/':
+            {
+                if  (Vy1S[i+1] == 0)
                 {
-                  if  (Vy1S[i+1] == 0)
-                  {
-                      cout << "\nYou cant divide by zero.";
-                      exit(0);
-                  }
-                  R=R/Vy1S[i+1];
-                  break;
+                    cout << "\nYou cant divide by zero.";
+                    exit(0);
                 }
+                R=R/Vy1S[i+1];
+                break;
+            }
         }
 
 
