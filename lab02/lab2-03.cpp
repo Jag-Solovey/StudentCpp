@@ -7,8 +7,12 @@ double res ()
     {
         char *S1vy = new char[66];
         double *Vy1S = new double[2];
-        *S1vy = cin.get();
-        //Прекращение ввода фразой end
+        for (; ;)
+        {
+        cin >> S1vy;
+        if (*S1vy == '\n')
+            break;
+        }
         while ((S1vy[i] != '+')||(S1vy[i] != '-')||(S1vy[i] != '*')||(S1vy[i] != '/'))
             i++;
         Vy1S[0] = atof(S1vy);
