@@ -1,92 +1,70 @@
-//template <class T1>
-#pragma once
+
+//#pragma once template <class T>
 #include <iostream>
 #include <cstdlib>
 #include <cstring>
 using namespace std;
-namespace StructList
-{
-struct Book
-{
-    char* Name;
-    int Year;
-};
-struct List
-{
-    struct Node
-    {
-        Book data;
-        Node* next;
-        Node* prev;
-    };
-    Node* head = nullptr;
 
-    void addFirst(Book book)
-    {
-        Node* temp = new Node;
-        temp->data = book;
-        temp->next = NULL;
-        temp->prev = NULL;
 
-        if (head == NULL)
-        {
+    template<class T> class List {
+    private:
+
+        template<class T1>
+        class Node {
+        public:
+            T1 data;
+            Node *next;
+        };
+
+        Node<T> *head = nullptr;
+
+
+    public:
+        void addFirst(int book) {
+            Node<T> *temp = new Node<T>;
+            temp->data = book;
+            temp->next = NULL;
+
+            if (head == NULL) {
+                head = temp;
+                return;
+            }
+            temp->next = head;
+
             head = temp;
-            return;
         }
 
-        temp->next = head;
-        head->prev = temp;
-        head = temp;
-    }
+        void print() {
+            Node<T> *temp = head;
+            while (temp != nullptr) {
+                cout << temp->data << endl;
+                temp = temp->next;
+            }
+        }
 
-    void print()
-    {
-        Node* temp = head;
-        while (temp != nullptr)
+        void clear()
         {
-            cout << temp->data.Name << " (" << temp->data.Year << ")" << endl;
-            temp = temp->next;
+            T* temp = nullptr;
+            swap(temp, head);
+            delete[] temp;
         }
-    }
+    };
 
-    void clear()
-    {
 
-        while (head != nullptr)
-        {
-            delete[] head->data.Name;
-            Node* temp = head;
-            head = head->next;
-            delete temp;
-        }
-    }
-};
-}
-using namespace StructList;
 int main()
 {
     setlocale(LC_ALL, "Rus");
-    int arraySize = 3;
-    List list;
+    int size = 3;
+    List<int> list;
+    for (int i = 0; i < size; i++) {
+        int book;
 
-    for (int i = 0; i < arraySize; i++)
-    {
-        Book book;
 
-        char* buff = new char[255];
-        cout << "Книга " << i << ". Название: ";
-        cin >> buff;
-
-        book.Name = new char[strlen(buff) + 1];
-        strcpy(book.Name, buff);
-        book.Name[strlen(buff)] = '\0';
-
-        cout << "Книга " << i << ". Год: ";
-        cin >> book.Year;
+        cout << "Book " << i << ". Year: ";
+        cin >> book;
 
         list.addFirst(book);
     }
-
     list.print();
     list.clear();
-}
+    }
