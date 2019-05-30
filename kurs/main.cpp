@@ -35,7 +35,8 @@ public:
     void print() {
         Node<T> *temp = head;
         while (temp != nullptr) {
-            cout << temp->data.Area << " (" << temp->data.NumberOfRooms << ")" << endl;
+            cout << "Area: " << temp->data.Area << " Square: " << temp->data.Square << " Floor: " <<
+            temp->data.Floor << " Number of rooms: " << temp->data.NumberOfRooms<< endl;
             temp = temp->next;
         }
     }
@@ -58,7 +59,9 @@ int main()
         Apartment Apartment;
 
         char* in = new char[10];
-        cout << "Your apartment. " << endl << "Area: ";
+        if (i==1) cout << "Your apartment. " << endl;
+        else cout <<"Desired apartment. " << endl;
+        cout << "Area: ";
         cin >> in;
 
         Apartment.Area = new char[strlen(in) + 1];
@@ -66,7 +69,10 @@ int main()
         Apartment.Area[strlen(in)] = '\0';
         cout << "Number of rooms: ";
         cin >> Apartment.NumberOfRooms;
-
+        cout << "\nSquare of apartment: ";
+        cin >> Apartment.Square;
+        cout << "\nFloor: ";
+        cin >> Apartment.Floor;
         list.addFirst(Apartment);
     }
     list.print();
