@@ -1,70 +1,74 @@
-
-//#pragma once template <class T>
 #include <iostream>
-#include <cstdlib>
-#include <cstring>
+#include <string.h>
+
 using namespace std;
 
 
-    template<class T> class List {
-    private:
-
-        template<class T1>
-        class Node {
-        public:
-            T1 data;
-            Node *next;
-        };
-
-        Node<T> *head = nullptr;
-
-
-    public:
-        void addFirst(int book) {
-            Node<T> *temp = new Node<T>;
-            temp->data = book;
-            temp->next = NULL;
-
-            if (head == NULL) {
-                head = temp;
-                return;
-            }
-            temp->next = head;
-
+class Book {
+public:
+    char* name = 0;
+    unsigned int year = 0;
+};
+template<class T>
+class List {
+public:
+    ~List() {
+        while (head != nullptr) {
+            Node<T>* next = head->next;
+            delete head;
+            head = next;
+        }
+    }
+    void addFirst(T book) {
+        Node<T> *temp = new Node<T>;
+        temp->data = book;
+        temp->next = NULL;
+        if (head == NULL) {
             head = temp;
+            return;
         }
+        temp->next = head;
+        head = temp;
+    }
+    void print() {
+        Node<T> *temp = head;
+        while (temp != nullptr) {
+            cout << temp->data.name << " (" << temp->data.year << ")" << endl;
+            temp = temp->next;
+        }
+    }
+private:
+    template<class T1>
 
-        void print() {
-            Node<T> *temp = head;
-            while (temp != nullptr) {
-                cout << temp->data << endl;
-                temp = temp->next;
-            }
-        }
-
-        void clear()
-        {
-            T* temp = nullptr;
-            swap(temp, head);
-            delete[] temp;
-        }
+    class Node {
+    public:
+        T1 data;
+        Node* next;
     };
-
+    Node<T>* head = nullptr;
+};
 
 int main()
 {
-    setlocale(LC_ALL, "Rus");
-    int size = 3;
-    List<int> list;
+    int size = 2;
+    List<Book> list;
     for (int i = 0; i < size; i++) {
-        int book;
+        Book book;
 
+        char* in = new char[10];
+        cout << "Book " << i << ". Name: ";
+        cin >> in;
 
+        book.name = new char[strlen(in) + 1];
+        strcpy(book.name, in);
+        book.name[strlen(in)] = '\0';
         cout << "Book " << i << ". Year: ";
-        cin >> book;
+        cin >> book.year;
 
         list.addFirst(book);
     }
     list.print();
-    list.clear();
-    }
+    cout << endl;
+
+    return 0;
+}
