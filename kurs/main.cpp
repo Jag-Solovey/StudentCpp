@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string.h>
+#include <fstream>
 
 using namespace std;
 
@@ -21,6 +22,23 @@ public:
             head = next;
         }
     }
+    void Save()
+    {
+        Apartment Apartment;
+        string path = "ListWithApartments.txt";
+        ofstream fout;
+        fout.open(path, ofstream::app);
+        if(!fout.is_open())
+        {
+            cout << "Error with opening"<< endl;
+        }
+        else
+            {
+            cout << "File is open"<< endl;
+            fout.write((char*)&Apartment, sizeof(Apartment));
+            }
+        fout.close();
+    }
     void addFirst(T Apartment) {
         Node<T> *temp = new Node<T>;
         temp->data = Apartment;
@@ -36,7 +54,7 @@ public:
         Node<T> *temp = head;
         while (temp != nullptr) {
             cout << "Area: " << temp->data.Area << " Square: " << temp->data.Square << " Floor: " <<
-            temp->data.Floor << " Number of rooms: " << temp->data.NumberOfRooms<< endl;
+                 temp->data.Floor << " Number of rooms: " << temp->data.NumberOfRooms<< endl;
             temp = temp->next;
         }
     }
@@ -75,8 +93,27 @@ int main()
         cin >> Apartment.Floor;
         list.addFirst(Apartment);
     }
-    list.print();
-    cout << endl;
+    //list.print();
 
+    list.Save();
+    cout << endl;
+    string path = "ListWithApartments.txt";
+    ifstream fin;
+    fin.open(path);
+    if(!fin.is_open())
+    {
+        cout << "Error with opening"<< endl;
+    }
+    else
+    {
+        cout << "File is open"<< endl;
+        List<Apartment> pnt;
+        while(fin.read((char*)&pnt, sizeof(Apartment)))
+        {
+          pnt.print();
+        }
+
+    }
+    fin.close();
     return 0;
 }
