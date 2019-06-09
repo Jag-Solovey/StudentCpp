@@ -22,6 +22,16 @@ public:
             head = next;
         }
     }
+    ostream& operator<<(ostream& os, const Apartment& Apartment)
+    {
+        os << Apartment.Area << " " << Apartment.NumberOfRooms << " " << Apartment.Square << " " << Apartment.Floor;
+        return os;
+    }
+    istream& operator>>(istream& is, Apartment& Apartment)
+    {
+        is >> Apartment.Area >> Apartment.NumberOfRooms >> Apartment.Square >> Apartment.Floor;
+        return is;
+    }
     void Save()
     {
         Apartment Apartment;
@@ -34,11 +44,13 @@ public:
         }
         else
             {
-            cout << "File is open"<< endl;
-            fout.write((char*)&Apartment, sizeof(Apartment));
+            cout << "File is save"<< endl;
+            while
+            fout << Apartment << endl;
             }
         fout.close();
     }
+
     void addFirst(T Apartment) {
         Node<T> *temp = new Node<T>;
         temp->data = Apartment;
@@ -58,6 +70,30 @@ public:
             temp = temp->next;
         }
     }
+    void SavedValues()
+    {
+        string path = "ListWithApartments.txt";
+        ifstream fin;
+        fin.open(path);
+        if(!fin.is_open())
+        {
+            cout << "Error with opening"<< endl;
+        }
+        else
+        {
+            cout << "File is open"<< endl;
+            List<Apartment> pnt;
+            while(fin.read((char*)&pnt, sizeof(Apartment)))
+            {
+                pnt.print();
+            }
+
+        }
+        fin.close();
+    }
+    void check()
+    {};
+
 private:
     template<class T1>
 
@@ -77,8 +113,8 @@ int main()
         Apartment Apartment;
 
         char* in = new char[10];
-        if (i==1) cout << "Your apartment. " << endl;
-        else cout <<"Desired apartment. " << endl;
+        if (i==0) cout << "Desired apartment. " << endl;
+        else cout <<"Your apartment. " << endl;
         cout << "Area: ";
         cin >> in;
 
@@ -94,26 +130,19 @@ int main()
         list.addFirst(Apartment);
     }
     //list.print();
+    cout << "Select a search method:" << endl << "1. Automatic search" << endl << "2. Manual search";
+    int a;
+    cin >> a;
+    if (a == 1)
+    {
+        list.check();
+    }
+    if (a == 2)
+    {
 
+    }
     list.Save();
     cout << endl;
-    string path = "ListWithApartments.txt";
-    ifstream fin;
-    fin.open(path);
-    if(!fin.is_open())
-    {
-        cout << "Error with opening"<< endl;
-    }
-    else
-    {
-        cout << "File is open"<< endl;
-        List<Apartment> pnt;
-        while(fin.read((char*)&pnt, sizeof(Apartment)))
-        {
-          pnt.print();
-        }
-
-    }
-    fin.close();
+    list.SavedValues();
     return 0;
 }
