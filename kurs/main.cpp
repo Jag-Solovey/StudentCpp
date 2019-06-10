@@ -11,7 +11,9 @@ public:
     unsigned int Square = 0;
     unsigned int Floor = 0;
     unsigned int NumberOfRooms = 0;
+
 };
+
 template<class T>
 class List {
 public:
@@ -22,33 +24,26 @@ public:
             head = next;
         }
     }
-    ostream& operator<<(ostream& os, const Apartment& Apartment)
+
+    void Save(T Apartment)
     {
-        os << Apartment.Area << " " << Apartment.NumberOfRooms << " " << Apartment.Square << " " << Apartment.Floor;
-        return os;
-    }
-    istream& operator>>(istream& is, Apartment& Apartment)
-    {
-        is >> Apartment.Area >> Apartment.NumberOfRooms >> Apartment.Square >> Apartment.Floor;
-        return is;
-    }
-    void Save()
-    {
-        Apartment Apartment;
         string path = "ListWithApartments.txt";
-        ofstream fout;
-        fout.open(path, ofstream::app);
-        if(!fout.is_open())
+        fstream fs;
+        fs.open(path,fstream::in|ofstream::app);
+        if(!fs.is_open())
         {
             cout << "Error with opening"<< endl;
         }
         else
             {
             cout << "File is save"<< endl;
-            while
-            fout << Apartment << endl;
+                while (head != nullptr) {
+                    Node<T>* next = head->next;
+                    fs << Apartment << "\n";
+                    head = next;
+                }
             }
-        fout.close();
+        fs.close();
     }
 
     void addFirst(T Apartment) {
@@ -70,7 +65,7 @@ public:
             temp = temp->next;
         }
     }
-    void SavedValues()
+    void SavedValues(T Apartment)
     {
         string path = "ListWithApartments.txt";
         ifstream fin;
@@ -82,17 +77,22 @@ public:
         else
         {
             cout << "File is open"<< endl;
-            List<Apartment> pnt;
+            T pnt;
             while(fin.read((char*)&pnt, sizeof(Apartment)))
             {
-                pnt.print();
+                fin >> pnt;
+                if (!fin.read((char*)&pnt,  sizeof(Apartment)))
+                break;
             }
 
         }
         fin.close();
     }
-    void check()
-    {};
+    void check(T Apartment, T a2)
+    {
+        cout << a2;
+    }
+
 
 private:
     template<class T1>
@@ -104,6 +104,24 @@ private:
     };
     Node<T>* head = nullptr;
 };
+ostream& operator<<(ostream& out, Apartment& a)
+{
+    out << a.Area << " " << a.NumberOfRooms << " " <<
+    a.Square << " " << a.Floor;
+    return out;
+}
+istream& operator>>(istream& in, Apartment& a)
+{
+    in >> a.Area >> a.NumberOfRooms >>
+    a.Square >> a.Floor;
+    return in;
+}
+bool operator==(Apartment& a1, Apartment& a2)
+{
+    return (a1.NumberOfRooms == a2.NumberOfRooms && a1.Floor == a2.Floor &&
+            (a1.Square * 0.1 + a1.Square > a2.Square) &&
+            (a1.Square - a1.Square * 0.1 < a2.Square));
+}
 
 int main()
 {
@@ -133,16 +151,18 @@ int main()
     cout << "Select a search method:" << endl << "1. Automatic search" << endl << "2. Manual search";
     int a;
     cin >> a;
+    Apartment Apartment, a2;
     if (a == 1)
     {
-        list.check();
+        a2 =
+        list.check(Apartment, a2);
     }
     if (a == 2)
     {
 
     }
-    list.Save();
+    list.Save(Apartment);
     cout << endl;
-    list.SavedValues();
+    list.SavedValues(Apartment);
     return 0;
 }
