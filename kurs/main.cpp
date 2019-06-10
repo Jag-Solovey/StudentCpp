@@ -24,7 +24,6 @@ public:
             head = next;
         }
     }
-
     void Save(T Apartment)
     {
         string path = "ListWithApartments.txt";
@@ -67,6 +66,7 @@ public:
     }
     void SavedValues(T Apartment)
     {
+        List list;
         string path = "ListWithApartments.txt";
         ifstream fin;
         fin.open(path);
@@ -81,6 +81,7 @@ public:
             while(fin.read((char*)&pnt, sizeof(Apartment)))
             {
                 fin >> pnt;
+                list.addFirst(pnt);
                 if (!fin.read((char*)&pnt,  sizeof(Apartment)))
                 break;
             }
@@ -88,12 +89,49 @@ public:
         }
         fin.close();
     }
-    void check(T Apartment, T a2)
+    void check(T Apartment, int size)
     {
-        cout << a2;
+        List list;
+        int i=0;
+        while (i!=size)
+        {
+            if (Apartment[0] == Apartment[i])
+            {
+                cout << "Found this apartment option";
+                list(Apartment[i]).print;
+                remove(Apartment[0]);
+                remove(Apartment[i]);
+                break;
+            } else i++;
+        }
+        cout << "Nothing found";
     }
+    void check(T Apartment, int size, int i)
+    {
+        List list;
 
-
+            if (Apartment[0] == Apartment[i])
+            {
+                cout << "\nConditions are met. Exchange confirmed."<<endl;
+                list(Apartment[i]).print;
+                remove(Apartment[0]);
+                remove(Apartment[i]);
+            } else "\nTerms violated. Exchange is prohibited.";
+        }
+    T& operator[](const int index)
+    {
+        int count = 0;
+        List *temp = this->First;
+        while(temp != nullptr)
+        {
+            if (count == index)
+            {
+                return temp->data;
+            }
+            temp = temp->Next;
+            count++;
+        }
+    }
 private:
     template<class T1>
 
@@ -127,9 +165,8 @@ int main()
 {
     int size = 2;
     List<Apartment> list;
+    Apartment Apartment;
     for (int i = 0; i < size; i++) {
-        Apartment Apartment;
-
         char* in = new char[10];
         if (i==0) cout << "Desired apartment. " << endl;
         else cout <<"Your apartment. " << endl;
@@ -147,22 +184,24 @@ int main()
         cin >> Apartment.Floor;
         list.addFirst(Apartment);
     }
-    //list.print();
+    list.SavedValues(Apartment);
     cout << "Select a search method:" << endl << "1. Automatic search" << endl << "2. Manual search";
     int a;
     cin >> a;
-    Apartment Apartment, a2;
+
     if (a == 1)
     {
-        a2 =
-        list.check(Apartment, a2);
+        list.check(Apartment, size);
     }
     if (a == 2)
     {
-
+        list.print();
+        cout << "\nChoose the numder of apartment that interests you";
+        int c;
+        cin >> c;
+        list.check(Apartment, size, c);
     }
     list.Save(Apartment);
     cout << endl;
-    list.SavedValues(Apartment);
     return 0;
 }
