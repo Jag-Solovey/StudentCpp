@@ -7,11 +7,11 @@ using namespace std;
 позволяющий хранить пары вида «(ключ, значение)»
 и поддерживающий операции добавления пары, а также поиска и удаления пары по ключу.
 То есть по сути нам надо создать класс хранящий пары.
-Асслциативный массив будет реализован на основе расширяющегося массива.
+Ассоциативный массив будет реализован на основе расширяющегося массива.
 */
 
 template<class Key,class Value>//здесь используется одномерный массив
-class Apartment
+class assocArray
 {
 private:
     struct pair                //структура хранящая пару ключ значение
@@ -23,11 +23,11 @@ private:
     int size;                  //размер массива
     int len;                   //кол-во элементов массива, которые заполнены
 public:
-    Apartment() : size(1), len(0) //конструктор по умолчанию
+    assocArray () : size(1), len(0) //конструктор по умолчанию
     {
         pairs = new pair[size];    //создается массив размером 1, len=0 так массив пуст
     }
-    Apartment(const Apartment& arr)//конструктор копирования
+    assocArray (const assocArray & arr)//конструктор копирования
     {
         size = arr.size;
         len = arr.len;
@@ -38,7 +38,7 @@ public:
             pairs[i].value = arr.pairs[i].value;
         }
     }
-    ~Apartment()//деструктор
+    ~assocArray ()//деструктор
     {
         delete[] pairs;
     }
@@ -56,7 +56,7 @@ public:
         {
             pair* temp = new pair[size];//создается временный массив
             memcpy(temp, pairs, sizeof(pair) * size);//в него компируется все данный
-            this->~Apartment();//удаляется основной массив и дальше обнуляются все значение
+            this->~assocArray();//удаляется основной массив и дальше обнуляются все значение
             size = 1;
             int _len = len;
             len = 0;
@@ -123,7 +123,7 @@ public:
             }
         }
     }
-    friend ostream& operator<<(ostream& out, Apartment& a)//перегрузка оператора вывода
+    friend ostream& operator<<(ostream& out, assocArray& a)//перегрузка оператора вывода
     {
         for (int i = 0; i < a.len; i++)
         {
@@ -131,7 +131,7 @@ public:
         }
         return out;
     }
-    friend istream& operator>>(istream& in, Apartment& a)//перегрузка оператора ввода
+    friend istream& operator>>(istream& in, assocArray& a)//перегрузка оператора ввода
     {
         Key key;//создаются временные поля для ввода и последующей передачи их в метод добавления
         Value value;
@@ -186,14 +186,7 @@ public:
             {
                 in >> key;
                 in >> value;
-                if (in.eof())//проверка еще раз так как видимо из-за того, что 2 раза вводится значение за одну итерацию цикла,
-                {            // последние два значения вводятся два раза
-                    test = false;
-                }
-                if (test != false)
-                {
-                    insert(key, value);
-                }
+                insert(key, value);
             }
         }
         in.close();
@@ -202,12 +195,10 @@ public:
 
 int main()
 {
-    Apartment<int, char> test;//проверка шаблонной коллекции на работоспособность
-    test.insert(10, 'a');
-    test.insert(11, 'b');
-    test.insert(12, 'c');
+    assocArray <char, int> test;//проверка шаблонной коллекции на работоспособность
     test.download();
     cout << test;
+    cin >> test;
     cin >> test;
     cout << test;
     test.save();
