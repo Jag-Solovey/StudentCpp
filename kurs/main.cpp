@@ -230,7 +230,7 @@ int main()
     for (int i = 0; i < 2; i++) {
         if (i==0) cout << "Desired apartment. " << endl;
         else cout << "Your apartment. " << endl;
-        cout << "Area: \nNumber of rooms: \nSquare of apartment: \nFloor: ";
+        cout << "Area:  \nSquare of apartment:  \nFloor:  \nNumber of rooms:  " << endl;
         cin >> Apartment;
     }
     cout << "Select a search method:" << endl << "1. Automatic search" << endl << "2. Manual search";
