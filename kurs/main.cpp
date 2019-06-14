@@ -2,7 +2,29 @@
 #include <fstream>
 #include <string.h>
 using namespace std;
-
+class Apartment //Класс для выделения памяти для площади, этажа и кол-ва комнат
+{
+public:
+    unsigned int Square = 0, Floor = 0, NumberOfRooms = 0;
+};
+bool operator==(Apartment& a1, Apartment& a2)
+{
+    return (a1.NumberOfRooms == a2.NumberOfRooms && a1.Floor == a2.Floor &&
+            (a1.Square * 0.1 + a1.Square >= a2.Square) &&
+            (a1.Square - a1.Square * 0.1 <= a2.Square));
+}
+ostream& operator<<(ostream& out, Apartment& a)
+{
+    out << a.NumberOfRooms << " " <<
+    a.Square << " " << a.Floor;
+    return out;
+}
+istream& operator>>(istream& in, Apartment& a)
+{
+    in >> a.NumberOfRooms >>
+    a.Square >> a.Floor;
+    return in;
+}
 /*Ассоциативный массив — абстрактный тип данных (интерфейс к хранилищу данных),
 позволяющий хранить пары вида «(ключ, значение)»
 и поддерживающий операции добавления пары, а также поиска и удаления пары по ключу.
@@ -89,7 +111,7 @@ public:
     {
         for (int i = 0; i < len; i++)
         {
-            cout << pairs[i].key << " : " << pairs[i].value << endl;
+            cout << " " <<i+1<< ". " << pairs[i].key << " : " << pairs[i].value << endl;
         }
     }
     Value& operator[](Key key)//перегрузка оператора [ ] для вывода значения по ключу
@@ -195,28 +217,35 @@ public:
 
 int main()
 {
-    assocArray <char, int> test;//проверка шаблонной коллекции на работоспособность
+    /*assocArray <string, int> test;     //проверка шаблонной коллекции на работоспособность
     test.download();
     cout << test;
     cin >> test;
     cin >> test;
     cout << test;
     test.save();
-    return 0;
-    /*cout << "Select a search method:" << endl << "1. Automatic search" << endl << "2. Manual search";
+    return 0;*/
+
+    assocArray <string, Apartment> Apartment;
+    for (int i = 0; i < 2; i++) {
+        if (i==0) cout << "Desired apartment. " << endl;
+        else cout << "Your apartment. " << endl;
+        cout << "Area: \nNumber of rooms: \nSquare of apartment: \nFloor: ";
+        cin >> Apartment;
+    }
+    cout << "Select a search method:" << endl << "1. Automatic search" << endl << "2. Manual search";
     int a;
     cin >> a;
-
     if (a == 1)
     {
-        test.check();
+        //Apartment.check();
     }
     if (a == 2)
     {
-        test.show();
+        Apartment.show();
         cout << "\nChoose the numder of apartment that interests you";
         int c;
         cin >> c;
-        test.check();
-    }*/
+        //Apartment.check();
+    }
 }
