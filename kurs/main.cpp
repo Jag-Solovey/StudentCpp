@@ -1,207 +1,231 @@
 #include <iostream>
-#include <string.h>
 #include <fstream>
-
+#include <string.h>
 using namespace std;
 
+/*Ассоциативный массив — абстрактный тип данных (интерфейс к хранилищу данных),
+позволяющий хранить пары вида «(ключ, значение)»
+и поддерживающий операции добавления пары, а также поиска и удаления пары по ключу.
+То есть по сути нам надо создать класс хранящий пары.
+Асслциативный массив будет реализован на основе расширяющегося массива.
+*/
 
-class Apartment {
+template<class Key,class Value>//здесь используется одномерный массив
+class Apartment
+{
+private:
+    struct pair                //структура хранящая пару ключ значение
+    {
+        Key key;
+        Value value;
+    };
+    pair* pairs;               //одномерный массив структуры
+    int size;                  //размер массива
+    int len;                   //кол-во элементов массива, которые заполнены
 public:
-    char* Area = 0;
-    unsigned int Square = 0;
-    unsigned int Floor = 0;
-    unsigned int NumberOfRooms = 0;
-
-};
-
-template<class T>
-class List {
-public:
-    ~List() {
-        while (head != nullptr) {
-            Node<T>* next = head->next;
-            delete head;
-            head = next;
+    Apartment() : size(1), len(0) //конструктор по умолчанию
+    {
+        pairs = new pair[size];    //создается массив размером 1, len=0 так массив пуст
+    }
+    Apartment(const Apartment& arr)//конструктор копирования
+    {
+        size = arr.size;
+        len = arr.len;
+        pairs = new pair[size];
+        for (int i = 0; i < len; i++)
+        {
+            pairs[i].key = arr.pairs[i].key;
+            pairs[i].value = arr.pairs[i].value;
         }
     }
-    void Save(T Apartment)
+    ~Apartment()//деструктор
     {
-        string path = "ListWithApartments.txt";
-        fstream fs;
-        fs.open(path,fstream::in|ofstream::app);
-        if(!fs.is_open())
+        delete[] pairs;
+    }
+    void _delete(Key key)//метод удаления по ключу
+    {
+        bool test = false;
+        for (int i = 0; i < len; i++) //проверка на то есть ли в массиве элемент который нужно удалить
         {
-            cout << "Error with opening"<< endl;
-        }
-        else
+            if (pairs[i].key == key)
             {
-            cout << "File is save"<< endl;
-                while (head != nullptr) {
-                    Node<T>* next = head->next;
-                    fs << Apartment << "\n";
-                    head = next;
+                test = true;
+            }
+        }
+        if (test == true)//если test=true, то есть есть элемент с похожим ключем, выполняется следующие
+        {
+            pair* temp = new pair[size];//создается временный массив
+            memcpy(temp, pairs, sizeof(pair) * size);//в него компируется все данный
+            this->~Apartment();//удаляется основной массив и дальше обнуляются все значение
+            size = 1;
+            int _len = len;
+            len = 0;
+            pairs = new pair[size];//основной массив создается заного
+            for (int i = 0; i < _len; i++)//проверка есть ли во временном массиве введенный в метод ключ
+            {
+                if (temp[i].key != key)//если по текущему индексу ключ и введеный ключ не совпадают то
+                {
+                    insert(temp[i].key, temp[i].value);//в метод добавления передаются ключ и значение
                 }
             }
-        fs.close();
-    }
-
-    void addFirst(T Apartment) {
-        Node<T> *temp = new Node<T>;
-        temp->data = Apartment;
-        temp->next = NULL;
-        if (head == NULL) {
-            head = temp;
-            return;
-        }
-        temp->next = head;
-        head = temp;
-    }
-    void print() {
-        Node<T> *temp = head;
-        while (temp != nullptr) {
-            cout << "Area: " << temp->data.Area << " Square: " << temp->data.Square << " Floor: " <<
-                 temp->data.Floor << " Number of rooms: " << temp->data.NumberOfRooms<< endl;
-            temp = temp->next;
         }
     }
-    void SavedValues(T Apartment)
+    void insert(Key key, Value value)//собственно метод добавления в массив, так как ключи не уникальный, то здесь нет проверки ключа на уникальность
     {
-        List list;
-        string path = "ListWithApartments.txt";
-        ifstream fin;
-        fin.open(path);
-        if(!fin.is_open())
+        if (len == size)//проверка на заполненность массива
         {
-            cout << "Error with opening"<< endl;
+            pair* old = pairs;//копия массива
+            pairs = new pair[size *2];//создается новый массив размер которого в 2 раза больше
+            memcpy(pairs, old, sizeof(pair) * size);//копирование элементов в новый массив
+            size *= 2;
+            delete old;
+        }
+        pair temp;//создается временая переменная содержащая структуру
+        temp.key = key;//присваивается ключ
+        temp.value = value;//присваивается значение
+        pairs[len++] = temp;//следующему элементу массива присваивается значение времменой
+    }
+    void show()//вывод всех заполненых элементов массива
+    {
+        for (int i = 0; i < len; i++)
+        {
+            cout << pairs[i].key << " : " << pairs[i].value << endl;
+        }
+    }
+    Value& operator[](Key key)//перегрузка оператора [ ] для вывода значения по ключу
+    {
+        for (int i = 0; i < len; i++) // но так как ключи не уникальные, то выведется первый найденный ключ
+        {
+            if (pairs[i].key == key)
+            {
+                return pairs[i].value;
+            }
+        }
+        throw;
+    }
+    void getAll(Key key)//метод для получения всех значений у которых равные ключи
+    {
+        for (int i = 0; i < len; i++)
+        {
+            if (pairs[i].key == key)
+            {
+                cout << pairs[i].value << endl;
+            }
+        }
+    }
+    void getAll(Value value)//вывод всех ключей у которых равные значения
+    {
+        for (int i = 0; i < len; i++)
+        {
+            if (pairs[i].value == value)
+            {
+                cout << pairs[i].key << endl;
+            }
+        }
+    }
+    friend ostream& operator<<(ostream& out, Apartment& a)//перегрузка оператора вывода
+    {
+        for (int i = 0; i < a.len; i++)
+        {
+            out << a.pairs[i].key << " : " << a.pairs[i].value << endl;
+        }
+        return out;
+    }
+    friend istream& operator>>(istream& in, Apartment& a)//перегрузка оператора ввода
+    {
+        Key key;//создаются временные поля для ввода и последующей передачи их в метод добавления
+        Value value;
+        in >> key;
+        in >> value;
+        a.insert(key, value);
+        return in;
+    }
+    Key& operator[](Value value)//перегрузка оператора [ ] для вывода ключа по значению
+    {
+        for (int i = 0; i < len; i++)
+        {
+            if (pairs[i].value == value)
+            {
+                return pairs[i].key;
+            }
+        }
+        throw;
+    }
+    void save()//метод сохранения с относительным путем
+    {
+
+        ofstream out;
+        out.open("ListWithApartments.txt");
+        for (int i = 0; i < len; i++)
+        {
+            if (i == len - 1)//если элемент последний то не будет перехода на новую строку, так потом при вводе это создаст ошибку
+            {
+                out << pairs[i].key << endl << pairs[i].value;
+            }
+            else
+            {
+                out << pairs[i].key << endl << pairs[i].value<<endl;
+            }
+        }
+        out.close();
+    }
+    void download()
+    {
+        bool test = true;//переменная которая нужна при проверки достигнут ли конец файла
+        ifstream in;
+        in.open("ListWithApartments.txt");
+        if (!in)
+        {
+            cout << "error" << endl;
         }
         else
         {
-            cout << "File is open"<< endl;
-            T pnt;
-            while(fin.read((char*)&pnt, sizeof(Apartment)))
+            Key key;
+            Value value;
+            while (!in.eof())//вводится до тех пор пока не будет достигнут конец файла
             {
-                fin >> pnt;
-                list.addFirst(pnt);
-                if (!fin.read((char*)&pnt,  sizeof(Apartment)))
-                break;
+                in >> key;
+                in >> value;
+                if (in.eof())//проверка еще раз так как видимо из-за того, что 2 раза вводится значение за одну итерацию цикла,
+                {            // последние два значения вводятся два раза
+                    test = false;
+                }
+                if (test != false)
+                {
+                    insert(key, value);
+                }
             }
-
         }
-        fin.close();
+        in.close();
     }
-    void check(T Apartment, int size)
-    {
-        List list;
-        int i=0;
-        while (i!=size)
-        {
-            if (Apartment[0] == Apartment[i])
-            {
-                cout << "Found this apartment option";
-                list(Apartment[i]).print;
-                remove(Apartment[0]);
-                remove(Apartment[i]);
-                break;
-            } else i++;
-        }
-        cout << "Nothing found";
-    }
-    void check(T Apartment, int size, int i)
-    {
-        List list;
-
-            if (Apartment[0] == Apartment[i])
-            {
-                cout << "\nConditions are met. Exchange confirmed."<<endl;
-                list(Apartment[i]).print;
-                remove(Apartment[0]);
-                remove(Apartment[i]);
-            } else "\nTerms violated. Exchange is prohibited.";
-        }
-    T& operator[](const int index)
-    {
-        int count = 0;
-        List *temp = this->First;
-        while(temp != nullptr)
-        {
-            if (count == index)
-            {
-                return temp->data;
-            }
-            temp = temp->Next;
-            count++;
-        }
-    }
-private:
-    template<class T1>
-
-    class Node {
-    public:
-        T1 data;
-        Node* next;
-    };
-    Node<T>* head = nullptr;
 };
-ostream& operator<<(ostream& out, Apartment& a)
-{
-    out << a.Area << " " << a.NumberOfRooms << " " <<
-    a.Square << " " << a.Floor;
-    return out;
-}
-istream& operator>>(istream& in, Apartment& a)
-{
-    in >> a.Area >> a.NumberOfRooms >>
-    a.Square >> a.Floor;
-    return in;
-}
-bool operator==(Apartment& a1, Apartment& a2)
-{
-    return (a1.NumberOfRooms == a2.NumberOfRooms && a1.Floor == a2.Floor &&
-            (a1.Square * 0.1 + a1.Square > a2.Square) &&
-            (a1.Square - a1.Square * 0.1 < a2.Square));
-}
 
 int main()
 {
-    int size = 2;
-    List<Apartment> list;
-    Apartment Apartment;
-    for (int i = 0; i < size; i++) {
-        char* in = new char[10];
-        if (i==0) cout << "Desired apartment. " << endl;
-        else cout <<"Your apartment. " << endl;
-        cout << "Area: ";
-        cin >> in;
-
-        Apartment.Area = new char[strlen(in) + 1];
-        strcpy(Apartment.Area, in);
-        Apartment.Area[strlen(in)] = '\0';
-        cout << "Number of rooms: ";
-        cin >> Apartment.NumberOfRooms;
-        cout << "\nSquare of apartment: ";
-        cin >> Apartment.Square;
-        cout << "\nFloor: ";
-        cin >> Apartment.Floor;
-        list.addFirst(Apartment);
-    }
-    list.SavedValues(Apartment);
-    cout << "Select a search method:" << endl << "1. Automatic search" << endl << "2. Manual search";
+    Apartment<int, char> test;//проверка шаблонной коллекции на работоспособность
+    test.insert(10, 'a');
+    test.insert(11, 'b');
+    test.insert(12, 'c');
+    test.download();
+    cout << test;
+    cin >> test;
+    cout << test;
+    test.save();
+    return 0;
+    /*cout << "Select a search method:" << endl << "1. Automatic search" << endl << "2. Manual search";
     int a;
     cin >> a;
 
     if (a == 1)
     {
-        list.check(Apartment, size);
+        test.check();
     }
     if (a == 2)
     {
-        list.print();
+        test.show();
         cout << "\nChoose the numder of apartment that interests you";
         int c;
         cin >> c;
-        list.check(Apartment, size, c);
-    }
-    list.Save(Apartment);
-    cout << endl;
-    return 0;
+        test.check();
+    }*/
 }
