@@ -64,18 +64,8 @@ public:
     {
         delete[] pairs;
     }
-    void _delete(Key key)//метод удаления по ключу
+    void _delete()//метод удаления по ключу
     {
-        bool test = false;
-        for (int i = 0; i < len; i++) //проверка на то есть ли в массиве элемент который нужно удалить
-        {
-            if (pairs[i].key == key)
-            {
-                test = true;
-            }
-        }
-        if (test == true)//если test=true, то есть есть элемент с похожим ключем, выполняется следующие
-        {
             pair* temp = new pair[size];//создается временный массив
             memcpy(temp, pairs, sizeof(pair) * size);//в него компируется все данный
             this->~assocArray();//удаляется основной массив и дальше обнуляются все значение
@@ -85,12 +75,11 @@ public:
             pairs = new pair[size];//основной массив создается заного
             for (int i = 0; i < _len; i++)//проверка есть ли во временном массиве введенный в метод ключ
             {
-                if (temp[i].key != key)//если по текущему индексу ключ и введеный ключ не совпадают то
+                if (temp[i].key != "0")//если по текущему индексу ключ и введеный ключ не совпадают то
                 {
                     insert(temp[i].key, temp[i].value);//в метод добавления передаются ключ и значение
                 }
             }
-        }
     }
     void insert(Key key, Value value)//собственно метод добавления в массив, так как ключи не уникальный, то здесь нет проверки ключа на уникальность
     {
@@ -213,6 +202,59 @@ public:
         }
         in.close();
     }
+    void check()                    //функция для автоматической проверки
+    {
+        assocArray <string, Apartment> Apartment;
+        for (int i=2; i <= len; i++)
+        {
+            if (pairs[i].value == pairs[0].value)
+            {
+                cout << "Found this apartment option";
+                cout << "Area: " << pairs[i].key << " Square, floor and number of rooms: " << pairs[i].value;
+                pairs[0].key = "0";
+                pairs[1].key = "0";
+                pairs[i].key = "0";
+                break;
+            }
+            if (i == len)
+                {
+                    cout << "Nothing found";
+                    pairs[0].key = "0";
+                    break;
+                }
+            Apartment._delete();
+        }
+    }
+    bool check(int a, int x)                 //функция для проверки ручного поиска
+    {
+        assocArray <string, Apartment> Apartment;
+        if (pairs[a].value == pairs[0].value)
+        {
+            cout << "\nConditions are met. Exchange confirmed." << endl;
+            pairs[0].key = "0";
+            pairs[1].key = "0";
+            pairs[a].key = "0";
+            Apartment._delete();
+            return true;
+        }
+        else
+        {
+            if (x == 3)
+            {
+                cout << "Can't find a suitable option?";
+                string y;
+                cin >> y;
+                if (y == "yes")
+                {
+                    pairs[0].key = "0";
+                    Apartment._delete();
+                    return true;
+                }
+            }
+            cout << "\nTerms violated. Exchange is prohibited. \nChoose another option: ";
+            return false;
+        }
+    }
 };
 
 int main()
@@ -233,19 +275,27 @@ int main()
         cout << "Area:  \nSquare of apartment:  \nFloor:  \nNumber of rooms:  " << endl;
         cin >> Apartment;
     }
+    Apartment.download();
     cout << "Select a search method:" << endl << "1. Automatic search" << endl << "2. Manual search";
     int a;
     cin >> a;
     if (a == 1)
     {
-        //Apartment.check();
+        Apartment.check();
     }
     if (a == 2)
     {
         Apartment.show();
         cout << "\nChoose the numder of apartment that interests you";
-        int c;
+        int c,x = 0;
         cin >> c;
-        //Apartment.check();
+        while(!(Apartment.check(c, x)))
+        {
+            x++;
+            cin.clear();
+            cin.ignore(6666,'\n');
+            cin >> c;
+        }
     }
+    Apartment.save();
 }
