@@ -305,7 +305,7 @@ int main()
             cin >> c;
         }
     }
-    Apartment._delete("delete");
-    remove("ListWithApartments.txt");
-    Apartment.save();
+    Apartment._delete("delete"); //Удаление элементов с определенным для этого ключом
+    remove("ListWithApartments.txt"); //Очистка файла от предыдущих записей
+    Apartment.save(); //Внесение новых данных в файл
 }
