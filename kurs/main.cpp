@@ -6,25 +6,24 @@ class Apartment //Класс для выделения памяти для пл�
 {
 public:
     unsigned int Square = 0, Floor = 0, NumberOfRooms = 0;
+    friend bool operator==(Apartment& a1, Apartment& a2)
+    {
+        return ((a1.Square*0.1 + a1.Square >= a2.Square)&&
+                (a1.Square - a1.Square*0.1 <= a2.Square)&& a1.Floor == a2.Floor&&
+                a1.NumberOfRooms == a2.NumberOfRooms);
+    }
+    friend ostream& operator<<(ostream& out, Apartment& a)
+    {
+        out << a.Square << " " << a.Floor  << " " << a.NumberOfRooms ;
+        return out;
+    }
+    friend istream& operator>>(istream& in, Apartment& a)
+    {
+        in >> a.Square  >> a.Floor >> a.NumberOfRooms;
+        return in;
+    }
 };
-bool operator==(Apartment& a1, Apartment& a2)
-{
-    return ((a1.Square/10 + a1.Square >= a2.Square)&&
-            (a1.Square - a1.Square/10 <= a2.Square)&& a1.Floor == a2.Floor&&
-            a1.NumberOfRooms == a2.NumberOfRooms);
-}
-ostream& operator<<(ostream& out, Apartment& a)
-{
-    out << a.NumberOfRooms << " " <<
-    a.Square << " " << a.Floor;
-    return out;
-}
-istream& operator>>(istream& in, Apartment& a)
-{
-    in >> a.NumberOfRooms >>
-    a.Square >> a.Floor;
-    return in;
-}
+
 /*Ассоциативный массив — абстрактный тип данных (интерфейс к хранилищу данных),
 позволяющий хранить пары вида «(ключ, значение)»
 и поддерживающий операции добавления пары, а также поиска и удаления пары по ключу.
