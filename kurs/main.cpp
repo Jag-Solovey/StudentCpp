@@ -9,9 +9,9 @@ public:
 };
 bool operator==(Apartment& a1, Apartment& a2)
 {
-    return (a1.NumberOfRooms == a2.NumberOfRooms && a1.Floor == a2.Floor &&
-            (a1.Square * 0.1 + a1.Square >= a2.Square) &&
-            (a1.Square - a1.Square * 0.1 <= a2.Square));
+    return ((a1.Square/10 + a1.Square >= a2.Square)&&
+            (a1.Square - a1.Square/10 <= a2.Square)&& a1.Floor == a2.Floor&&
+            a1.NumberOfRooms == a2.NumberOfRooms);
 }
 ostream& operator<<(ostream& out, Apartment& a)
 {
@@ -64,9 +64,19 @@ public:
     {
         delete[] pairs;
     }
-    void _delete()//метод удаления по ключу
+    void _delete(Key key)//метод удаления по ключу
     {
-            pair* temp = new pair[size];//создается временный массив
+        bool test = false;
+        for (int i = 0; i < len; i++) //проверка на то есть ли в массиве элемент который нужно удалить
+        {
+            if (pairs[i].key == key)
+            {
+                test = true;
+            }
+        }
+        if (test == true)//если test=true, то есть есть элемент с похожим ключем, выполняется следующие
+        {
+            pair *temp = new pair[size];//создается временный массив
             memcpy(temp, pairs, sizeof(pair) * size);//в него компируется все данный
             this->~assocArray();//удаляется основной массив и дальше обнуляются все значение
             size = 1;
@@ -75,11 +85,12 @@ public:
             pairs = new pair[size];//основной массив создается заного
             for (int i = 0; i < _len; i++)//проверка есть ли во временном массиве введенный в метод ключ
             {
-                if (temp[i].key != "0")//если по текущему индексу ключ и введеный ключ не совпадают то
+                if (temp[i].key != key)//если по текущему индексу ключ и введеный ключ не совпадают то
                 {
                     insert(temp[i].key, temp[i].value);//в метод добавления передаются ключ и значение
                 }
             }
+        }
     }
     void insert(Key key, Value value)//собственно метод добавления в массив, так как ключи не уникальный, то здесь нет проверки ключа на уникальность
     {
@@ -204,50 +215,45 @@ public:
     }
     void check()                    //функция для автоматической проверки
     {
-        assocArray <string, Apartment> Apartment;
         for (int i=2; i <= len; i++)
         {
             if (pairs[i].value == pairs[0].value)
             {
-                cout << "Found this apartment option";
+                cout << "Found this apartment option" << endl;
                 cout << "Area: " << pairs[i].key << " Square, floor and number of rooms: " << pairs[i].value;
-                pairs[0].key = "0";
-                pairs[1].key = "0";
-                pairs[i].key = "0";
+                pairs[0].key = "delete"; //Присвоения ключа удобного для удаления
+                pairs[1].key = "delete";
+                pairs[i].key = "delete";
                 break;
             }
             if (i == len)
                 {
                     cout << "Nothing found";
-                    pairs[0].key = "0";
+                    pairs[0].key = "delete";
                     break;
                 }
-            Apartment._delete();
         }
     }
     bool check(int a, int x)                 //функция для проверки ручного поиска
     {
-        assocArray <string, Apartment> Apartment;
         if (pairs[a].value == pairs[0].value)
         {
             cout << "\nConditions are met. Exchange confirmed." << endl;
-            pairs[0].key = "0";
-            pairs[1].key = "0";
-            pairs[a].key = "0";
-            Apartment._delete();
+            pairs[0].key = "delete";
+            pairs[1].key = "delete";
+            pairs[a].key = "delete";
             return true;
         }
         else
         {
-            if (x == 3)
+            if (x == 2)    //Функция для выходя при 3 неудачных попытках выбора
             {
                 cout << "Can't find a suitable option?";
                 string y;
                 cin >> y;
                 if (y == "yes")
                 {
-                    pairs[0].key = "0";
-                    Apartment._delete();
+                    pairs[0].key = "delete";
                     return true;
                 }
             }
@@ -269,19 +275,20 @@ int main()
     return 0;*/
 
     assocArray <string, Apartment> Apartment;
-    for (int i = 0; i < 2; i++) {
+    for (int i = 0; i < 2; i++)   //Ввод изначальных пунктов: желаемой и искомой квартиры
+    {
         if (i==0) cout << "Desired apartment. " << endl;
         else cout << "Your apartment. " << endl;
         cout << "Area:  \nSquare of apartment:  \nFloor:  \nNumber of rooms:  " << endl;
         cin >> Apartment;
     }
-    Apartment.download();
+    Apartment.download();    //Добавление в массив квартир из сохраненного списка
     cout << "Select a search method:" << endl << "1. Automatic search" << endl << "2. Manual search";
     int a;
     cin >> a;
     if (a == 1)
     {
-        Apartment.check();
+        Apartment.check();  //Применение функции автоматического поиска
     }
     if (a == 2)
     {
@@ -289,13 +296,16 @@ int main()
         cout << "\nChoose the numder of apartment that interests you";
         int c,x = 0;
         cin >> c;
-        while(!(Apartment.check(c, x)))
-        {
+        c = c-1;
+        while(!(Apartment.check(c, x)))  //Применение логической функции ручного поиска
+        {                                // Выполняется до момента удачного выбора или при достижении условия отмены выбора
             x++;
             cin.clear();
             cin.ignore(6666,'\n');
             cin >> c;
         }
     }
+    Apartment._delete("delete");
+    remove("ListWithApartments.txt");
     Apartment.save();
 }
