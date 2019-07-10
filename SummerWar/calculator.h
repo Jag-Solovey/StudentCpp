@@ -22,6 +22,7 @@ private slots:
     void on_pushButton_point_clicked();
     void on_pushButton_AC_clicked();
     void on_pushButton_sqrt_clicked();
+    void actions_with_numbers();
 };
 
 #endif // CALCULATOR_H
