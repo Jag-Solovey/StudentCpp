@@ -1,5 +1,10 @@
 #include "calculator.h"
 #include "ui_calculator.h"
+#include <iostream>
+#include <string>
+#include <stack>
+#include <cmath>
+using namespace std;
 bool dot_click = false;
 bool sqrt_click = false;
 bool pow_click = false;
@@ -64,6 +69,10 @@ void Calculator::on_pushButton_sqrt_clicked()
         ui->result_show->setText(ui->result_show->text()+ "√");
         sqrt_click = true;
         dot_click = false;
+        plus_click = true;
+        minus_click = true;
+        mult_click = true;
+        division_click = true;
     }
 }
 void Calculator::actions_with_numbers()
@@ -109,4 +118,139 @@ void Calculator::actions_with_numbers()
         dot_click = false;
         sqrt_click = false;
     }
+}
+
+void cheking (const char* all_expression)
+{
+    int i = 0;  //Проверка на пробелы
+    while (all_expression[i] != '=')
+    {
+        if (all_expression[i] == '\0') {
+            ui->result_show->setText("Error");
+            exit(0);
+        }
+        i++;
+    }
+}
+void Sqrt_or_pow(stack<char>& actions, stack<double>& numbers)
+{
+    char ch = 251;
+    double ptr = numbers.top();
+    numbers.pop();
+    if (actions.top() == '^')
+    {
+        ptr = pow(numbers.top(),ptr);
+        numbers.pop();
+        actions.pop();
+        numbers.push(ptr);
+    }
+    if (actions.top() == ch)
+    {
+        ptr = sqrt(ptr);
+        actions.pop();
+        numbers.push(ptr);
+    }
+}
+void Mult_or_division(stack<char>& actions, stack<double>& numbers)
+{
+    double ptr = numbers.top();
+    numbers.pop();
+    if (actions.top() == '*')
+    {
+        ptr = ptr*numbers.top();
+        numbers.pop();
+        actions.pop();
+        numbers.push(ptr);
+    }
+    if ((ptr != 0)&&(actions.top() == '/'))
+    {
+        ptr = numbers.top() / ptr;
+        numbers.pop();
+        actions.pop();
+        numbers.push(ptr);
+    }
+    if ((ptr == 0)&&(actions.top() == '/'))
+    {
+        ui->result_show->setText( "Error");
+        exit(0);
+    }
+}
+void Plus_or_minus(stack <char>& actions, stack <double>& numbers)
+{
+    double ptr_number = numbers.top();
+    numbers.pop();
+    char ptr_action = actions.top();
+    actions.pop();
+    if (((actions.top() == '+')&&(ptr_action == '+'))||((actions.top() == '-')&&(ptr_action == '-'))||((actions.top() == '\001')&&(ptr_action == '+')))
+    {
+        ptr_number = numbers.top() + ptr_number;
+        numbers.pop();
+        numbers.push(ptr_number);
+    }
+    if (((actions.top() == '+')&&(ptr_action == '-'))||((actions.top() == '-')&&(ptr_action == '+'))||((actions.top() == '\001')&&(ptr_action == '-')))
+    {
+        ptr_number = numbers.top() - ptr_number;
+        numbers.pop();
+        numbers.push(ptr_number);
+    }
+}
+void Calculator::on_pushButton_equally_clicked()
+{
+    ui->result_show->setText(ui->result_show->text()+ "=");
+    char* all_expression = new char[50];
+    char* number = new char[25];
+    all_expression = ui->result_show->text();
+    cheking(all_expression);
+    stack <double> numbers;
+    stack <char> actions;
+    char ch = 251;
+    actions.push(1);
+    int i = 0;
+    while (all_expression[i] != '=')
+    {
+        int k = 0;
+        int j = i;
+        while ((all_expression[j] != '+')&&(all_expression[j] != '*')&&(all_expression[j] != '-')&&(all_expression[j] != '/')&&(all_expression[i] != '=')&&(all_expression[j] != '^')&&(all_expression[j] != ch))
+        {
+            number[k] = all_expression[j];
+            j++;
+            i = j;
+            k++;
+        }
+        double a = atof(number);
+        numbers.push(a);
+        if (actions.top()== '^') Sqrt_or_pow(actions, numbers);
+        if ((actions.top()== ch)&&(all_expression[i] != '^')) Sqrt_or_pow(actions, numbers);
+        if (((actions.top()== '*')||(actions.top()== '/'))&&((all_expression[i] != '^')||(all_expression[i] != ch)))
+        {
+            Mult_or_division(actions, numbers);
+        }
+        if (all_expression[i] == '=') break;
+        actions.push(all_expression[i]);
+        for (int k=0; k<=sizeof number; k++)
+        {
+            number[k]=' ';
+        }
+        i++;
+    }
+    while (numbers.top() == 0)
+    {
+        numbers.pop();
+    }
+    while (actions.top() == '\000')
+    {
+        actions.pop();
+    }
+    while (actions.top() != '\001')
+    {
+        Plus_or_minus(actions, numbers);
+    }
+    ui->result_show->setText( numbers.top());
+    while (!(numbers.empty())&&!(actions.empty()))
+    {
+        actions.pop();
+        numbers.pop();
+    }
+    delete [] number;
+    delete [] all_expression;
 }
