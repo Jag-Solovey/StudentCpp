@@ -33,6 +33,44 @@ Calculator::~Calculator()
 {
     delete ui;
 }
+void Calculator::keyPressEvent(QKeyEvent *event)
+{
+    int key=event->key();
+    QString str=QString(QChar(key));
+    if(key==Qt::Key_0)
+        ui->pushButton_0->clicked();
+    else if(key==Qt::Key_1)
+        ui->pushButton_1->clicked();
+    else if(key==Qt::Key_2)
+        ui->pushButton_2->clicked();
+    else if(key==Qt::Key_3)
+        ui->pushButton_3->clicked();
+    else if(key==Qt::Key_4)
+        ui->pushButton_4->clicked();
+    else if(key==Qt::Key_5)
+        ui->pushButton_6->clicked();
+    else if(key==Qt::Key_6)
+        ui->pushButton_6->clicked();
+    else if(key==Qt::Key_7)
+        ui->pushButton_7->clicked();
+    else if(key==Qt::Key_8)
+        ui->pushButton_8->clicked();
+    else if(key==Qt::Key_9)
+        ui->pushButton_9->clicked();
+    else if(key==Qt::Key_Delete)
+        ui->pushButton_AC->clicked();
+    else if(key==Qt::Key_Plus)
+        ui->pushButton_plus->clicked();
+    else if(key==Qt::Key_Minus)
+        ui->pushButton_minus->clicked();
+    else if(key==Qt::Key_Enter)
+        ui->pushButton_equally->clicked();
+    else if(key==42)
+        ui->pushButton_mult->clicked();
+    else if(key==47)
+        ui->pushButton_divide->clicked();
+    else if(key==46)
+        ui->pushButton_point->clicked();
 void Calculator::digits_numbers()
 {
     QPushButton *button = (QPushButton*)sender();
