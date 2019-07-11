@@ -14,32 +14,6 @@
    <string>Calculator</string>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <widget class="QLabel" name="result_show">
-    <property name="geometry">
-     <rect>
-      <x>0</x>
-      <y>0</y>
-      <width>337</width>
-      <height>41</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>10</pointsize>
-     </font>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">QLabel {
-  qproperty-alignment: 'AlignVCenter | AlignRight';
-  border: 1px solid gray;
-}
-
-background-color : white;</string>
-    </property>
-    <property name="text">
-     <string>0</string>
-    </property>
-   </widget>
    <widget class="QPushButton" name="pushButton">
     <property name="geometry">
      <rect>
@@ -615,12 +589,38 @@ QPushButton:pressed {
      <string>.</string>
     </property>
    </widget>
-   <widget class="QLabel" name="show_pow">
+   <widget class="QLineEdit" name="result_show">
     <property name="geometry">
      <rect>
-      <x>-2</x>
+      <x>0</x>
+      <y>0</y>
+      <width>335</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>10</pointsize>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QLineEdit{
+  qproperty-alignment: 'AlignVCenter | AlignRight';
+  border: 1px solid gray;
+}
+
+background-color : white;</string>
+    </property>
+    <property name="text">
+     <string>0</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="show_pow_2">
+    <property name="geometry">
+     <rect>
+      <x>3</x>
       <y>5</y>
-      <width>336</width>
+      <width>326</width>
       <height>20</height>
      </rect>
     </property>

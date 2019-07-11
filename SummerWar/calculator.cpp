@@ -37,8 +37,17 @@ void Calculator::digits_numbers()
 {
     QPushButton *button = (QPushButton*)sender();
     QString all_numbers;
-    all_numbers = (ui->result_show->text()+button->text()).toQString();
-    ui->result_show->setText(all_numbers, 'g', 50);
+    if (!pow_click)
+    {
+        ui->pow_show->setText(ui->pow_show->text()+ "   ")
+        all_numbers = (ui->result_show->text()+button->text()).toQString();
+        ui->result_show->setText(all_numbers, 'g', 50);
+    }
+    else {
+        ui->result_show->setText(ui->result_show->text()+ " ");
+        all_numbers = (ui->pow_show->text()+button->text()).toQString();
+        ui->pow_show->setText(all_numbers, 'g', 50);
+    }
     plus_click = false;
     minus_click = false;
     division_click = false;
@@ -57,6 +66,7 @@ void Calculator::on_pushButton_point_clicked()
 void Calculator::on_pushButton_AC_clicked()
 {
     ui->result_show->setText("0");
+    ui->pow_show->setText("");
     dot_click = false;
     sqrt_click = false;
     pow_click = false;
@@ -75,63 +85,67 @@ void Calculator::on_pushButton_sqrt_clicked()
         division_click = true;
     }
 }
+void Calculator::on_pushButton_pow_clicked()
+{
+    if(!pow_click)
+    {
+    dot_click = false;
+    pow_click = true;
+    }
+}
 void Calculator::actions_with_numbers()
 {
     QPushButton *button = (QPushButton*)sender();
     if(!plus_click)
     {
         ui->result_show->setText(ui->result_show->text()+ "+");
+        ui->pow_show->setText(ui->pow_show->text()+ "    ");
         plus_click = true;
         minus_click = true;
         mult_click = true;
         division_click = true;
         dot_click = false;
         sqrt_click = false;
+        pow_click = false;
     }
     else if (!minus_click)
     {
         ui->result_show->setText(ui->result_show->text()+ "-");
+        ui->pow_show->setText(ui->pow_show->text()+ "  ");
         plus_click = true;
         minus_click = true;
         mult_click = true;
         division_click = true;
         dot_click = false;
         sqrt_click = false;
+        pow_click = false;
     }
     else if (!mult_click)
     {
         ui->result_show->setText(ui->result_show->text()+ "*");
+        ui->pow_show->setText(ui->pow_show->text()+ "    ");
         plus_click = true;
         minus_click = true;
         mult_click = true;
         division_click = true;
         dot_click = false;
         sqrt_click = false;
+        pow_click = false;
     }
     else if (!division_click)
     {
         ui->result_show->setText(ui->result_show->text()+ "/");
+        ui->pow_show->setText(ui->pow_show->text()+ "  ");
         plus_click = true;
         minus_click = true;
         mult_click = true;
         division_click = true;
         dot_click = false;
         sqrt_click = false;
+        pow_click = false;
     }
 }
 
-void cheking (const char* all_expression)
-{
-    int i = 0;  //Проверка на пробелы
-    while (all_expression[i] != '=')
-    {
-        if (all_expression[i] == '\0') {
-            ui->result_show->setText("Error");
-            exit(0);
-        }
-        i++;
-    }
-}
 void Sqrt_or_pow(stack<char>& actions, stack<double>& numbers)
 {
     char ch = 251;
@@ -198,9 +212,11 @@ void Calculator::on_pushButton_equally_clicked()
 {
     ui->result_show->setText(ui->result_show->text()+ "=");
     char* all_expression = new char[50];
+    char* pow_show = new char[50];
+    char* num_pow = new char[25];
     char* number = new char[25];
-    all_expression = ui->result_show->text();
-    cheking(all_expression);
+    all_expression = (ui->result_show->text()).toChar;
+    pow_show = (ui->pow_show->text()).toChar;
     stack <double> numbers;
     stack <char> actions;
     char ch = 251;
@@ -210,7 +226,7 @@ void Calculator::on_pushButton_equally_clicked()
     {
         int k = 0;
         int j = i;
-        while ((all_expression[j] != '+')&&(all_expression[j] != '*')&&(all_expression[j] != '-')&&(all_expression[j] != '/')&&(all_expression[i] != '=')&&(all_expression[j] != '^')&&(all_expression[j] != ch))
+        while ((all_expression[j] != '+')&&(all_expression[j] != '*')&&(all_expression[j] != '-')&&(all_expression[j] != '/')&&(all_expression[i] != '=')&&(pow_show[j] == ' ')&&(all_expression[j] != ch))
         {
             number[k] = all_expression[j];
             j++;
@@ -219,6 +235,21 @@ void Calculator::on_pushButton_equally_clicked()
         }
         double a = atof(number);
         numbers.push(a);
+        if (pow_show[j] != ' ')
+                {
+                    actions.push('^');
+                    j = i;
+                    k=0;
+                    while (pow_show[j] != ' ')
+                    {
+                        num_pow[k] = pow_show[j];
+                        k++;
+                        j++;
+                        i=j;
+                    }
+                    a = atof(num_pow);
+                    numbers.push(a);
+                }
         if (actions.top()== '^') Sqrt_or_pow(actions, numbers);
         if ((actions.top()== ch)&&(all_expression[i] != '^')) Sqrt_or_pow(actions, numbers);
         if (((actions.top()== '*')||(actions.top()== '/'))&&((all_expression[i] != '^')||(all_expression[i] != ch)))
@@ -245,7 +276,8 @@ void Calculator::on_pushButton_equally_clicked()
     {
         Plus_or_minus(actions, numbers);
     }
-    ui->result_show->setText( numbers.top());
+    QString m = numbers.top();
+    ui->result_show->setText(m, 'g', 50);
     while (!(numbers.empty())&&!(actions.empty()))
     {
         actions.pop();
@@ -253,4 +285,8 @@ void Calculator::on_pushButton_equally_clicked()
     }
     delete [] number;
     delete [] all_expression;
+    delete [] pow_show;
+    delete [] num_pow;
 }
+
+
