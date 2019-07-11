@@ -27,6 +27,10 @@ Calculator::Calculator(QWidget *parent) :
     connect(ui->pushButton_7, SIGNAL(clicked()), this, SLOT(digits_numbers()));
     connect(ui->pushButton_8, SIGNAL(clicked()), this, SLOT(digits_numbers()));
     connect(ui->pushButton_9, SIGNAL(clicked()), this, SLOT(digits_numbers()));
+    connect(ui->pushButton_plus, SIGNAL(clicked()), this, SLOT(actions_with_numbers()));
+    connect(ui->pushButton_minus, SIGNAL(clicked()), this, SLOT(actions_with_numbers()));
+    connect(ui->pushButton_mult, SIGNAL(clicked()), this, SLOT(actions_with_numbers()));
+    connect(ui->pushButton_division, SIGNAL(clicked()), this, SLOT(actions_with_numbers()));
 }
 
 Calculator::~Calculator()
