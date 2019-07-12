@@ -13,7 +13,7 @@ bool minus_click = false;
 bool division_click = false;
 bool mult_click = false;
 bool undo_click = false;
-int L=0
+int L=0;
 char** save_zone = new char*[4];
     for (int i = 0; i<5; i++)
     {
