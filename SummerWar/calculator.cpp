@@ -1,9 +1,9 @@
 #include "calculator.h"
 #include "ui_calculator.h"
-#include <iostream>
-#include <string>
-#include <stack>
-#include <cmath>
+#include <QIOStream>
+#include <QString>
+#include <QStack>
+#include <qmath.h>
 using namespace std;
 bool dot_click = false;
 bool sqrt_click = false;
@@ -259,8 +259,8 @@ void Calculator::on_pushButton_equally_clicked()
     char* number = new char[25];
     all_expression = (ui->result_show->text()).toChar;
     pow_show = (ui->pow_show->text()).toChar;
-    stack <double> numbers;
-    stack <char> actions;
+    QStack <double> numbers;
+    QStack <char> actions;
     char ch = 251;
     actions.push(1);
     int i = 0;
@@ -320,6 +320,7 @@ void Calculator::on_pushButton_equally_clicked()
     }
     QString m = numbers.top();
     ui->result_show->setText(m, 'g', 50);
+    ui->pow_show->setText("");
     while (!(numbers.empty())&&!(actions.empty()))
     {
         actions.pop();
