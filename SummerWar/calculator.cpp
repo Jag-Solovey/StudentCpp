@@ -12,6 +12,18 @@ bool plus_click = false;
 bool minus_click = false;
 bool division_click = false;
 bool mult_click = false;
+bool undo_click = false;
+int L=0
+char** save_zone = new char*[4];
+    for (int i = 0; i<5; i++)
+    {
+        save_zone[i] = new char[50];
+    }
+    char** save_zone_pow = new char*[4];
+    for (int i = 0; i<5; i++)
+    {
+        save_zone_pow[i] = new char[50];
+    }
 Calculator::Calculator(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::Calculator)
@@ -257,8 +269,26 @@ void Calculator::on_pushButton_equally_clicked()
     char* pow_show = new char[50];
     char* num_pow = new char[25];
     char* number = new char[25];
-    all_expression = (ui->result_show->text()).toChar;
-    pow_show = (ui->pow_show->text()).toChar;
+    all_expression = ui->result_show->text();
+    pow_show = ui->pow_show->text();
+    if (L!=5)
+        {
+            save_zone[L]= ui->result_show->text();
+            save_zone_pow[L]= ui->pow_show->text();
+            L++;
+        }
+        else
+        {
+            int j=0;
+            while (j!=4)
+            {
+                save_zone[j]=save_zone[j+1];
+                save_zone_pow[j]=save_zone_pow[j+1];
+                j++;
+            }
+            save_zone[j]= ui->result_show->text();
+            save_zone_pow[j]= ui->pow_show->text();
+        }
     QStack <double> numbers;
     QStack <char> actions;
     char ch = 251;
@@ -333,3 +363,29 @@ void Calculator::on_pushButton_equally_clicked()
 }
 
 
+
+void Calculator::on_pushButton_undo_clicked()
+{
+    if (L!=0)
+        {
+            L--;
+            undo_click = true;
+            QString m = save_zone[L];
+            ui->result_show->setText(m, 'g', 50);
+            m = save_zone_pow[L];
+            ui->pow_show->setText(m, 'g', 50);
+        }
+}
+
+void Calculator::on_pushButton_do_clicked()
+{
+    if (undo_click)
+        {
+            L++;
+            QString m = save_zone[L];
+            ui->result_show->setText(m, 'g', 50);
+            m = save_zone_pow[L];
+            ui->pow_show->setText(m, 'g', 50);
+            if (L==4)undo_click = false;
+        }
+}
