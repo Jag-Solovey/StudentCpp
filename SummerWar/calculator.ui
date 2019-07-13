@@ -589,7 +589,7 @@ QPushButton:pressed {
      <string>.</string>
     </property>
    </widget>
-   <widget class="QLineEdit" name="result_show">
+   <widget class="QLabel" name="result_show">
     <property name="geometry">
      <rect>
       <x>0</x>
@@ -598,13 +598,8 @@ QPushButton:pressed {
       <height>41</height>
      </rect>
     </property>
-    <property name="font">
-     <font>
-      <pointsize>10</pointsize>
-     </font>
-    </property>
     <property name="styleSheet">
-     <string notr="true">QLineEdit{
+     <string notr="true">QLabel{
   qproperty-alignment: 'AlignVCenter | AlignRight';
   border: 1px solid gray;
 }
@@ -615,10 +610,10 @@ background-color : white;</string>
      <string>0</string>
     </property>
    </widget>
-   <widget class="QLabel" name="show_pow_2">
+   <widget class="QLabel" name="show_pow">
     <property name="geometry">
      <rect>
-      <x>3</x>
+      <x>5</x>
       <y>5</y>
       <width>326</width>
       <height>20</height>
